@@ -37,7 +37,7 @@
                 <button disabled='disabled' v-else>
                     Add to cart
                 </button>
-                <span v-if='Lesson.spaces === cartCount(Lesson.id)'>No more available spaces!</span>
+                <span v-if='Lesson.spaces === cartCount(Lesson.id)'>No mor available spaces!</span>
                 <span v-else-if="Lesson.spaces - cartCount(Lesson.id) < 5">
                 Only few left!</span>
                 <span v-else>Buy now!</span>
