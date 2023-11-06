@@ -28,16 +28,17 @@
                 <h2 v-text="Lesson.Subject"></h2>
                 <p v-text="Lesson.Location"></p>
                 <p>Price: {{Lesson.price}}</p>
-                <p>This Lesson remains {{Lesson.spaces - cartCount(Lesson.id)}}</p>
+                <p v-if="Lesson.spaces === cartCount(Lesson.id)"></p>
+                <p v-else>This Lesson remains {{Lesson.spaces - cartCount(Lesson.id)}} spaces</p>
                 <button v-on:click= "addToCart (Lesson)" v-if= "canAddToCart (Lesson)">
                     Add to cart
                 </button>
                 <button disabled='disabled' v-else>
                     Add to cart
                 </button>
-                <span v-if='Lesson.spaces === cartCount(Lesson.id)'>All out!</span>
+                <span v-if='Lesson.spaces === cartCount(Lesson.id)'>No more available spaces!</span>
                 <span v-else-if="Lesson.spaces - cartCount(Lesson.id) < 5">
-                Only {{Lesson.spaces - cartCount(Lesson.id)}} left!</span>
+                Only few left!</span>
                 <span v-else>Buy now!</span>
                 <div>
                     <span v-for='n in Lesson.rating'>★</span>
