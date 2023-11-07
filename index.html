@@ -10,14 +10,20 @@
     
 </head>
 <body>
-    <div id="app">
+    <div id="app" class="container-fluid mt-3">
         <header>
-            <!-- <h1 v-text= "sitename"></h1> -->
-            <h1>{{ sitename }}</h1>
-            <button v-on:click= 'showCheckout'>
-                {{ cartItemCount }}
-                <span class="fas fa-shopping-cart"></span>Checkout
-            </button>
+            <div class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top" style="margin: 0;">
+                <div class="col-sm-10">
+                    <!-- <h1 v-text= "sitename"></h1> -->
+                    <h2 class="text-white">{{ sitename }}</h2>
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-secondary text-white" v-on:click= 'showCheckout'>
+                        {{ cartItemCount }}
+                        <span class="fas fa-shopping-cart"></span>Checkout
+                    </button>         
+                </div>
+            </div>
         </header>
         <main>
             <!-- Lesson page -->
@@ -31,10 +37,10 @@
                 <p>Price: {{Lesson.price}}</p>
                 <p v-if="Lesson.spaces === cartCount(Lesson.id)"></p>
                 <p v-else>This Lesson remains {{Lesson.spaces - cartCount(Lesson.id)}} spaces</p>
-                <button v-on:click= "addToCart (Lesson)" v-if= "canAddToCart (Lesson)">
+                <button class="btn btn-primary" v-on:click= "addToCart (Lesson)" v-if= "canAddToCart (Lesson)">
                     Add to cart
                 </button>
-                <button disabled='disabled' v-else>
+                <button class="btn btn-secondary" disabled='disabled' v-else>
                     Add to cart
                 </button>
                 <span v-if='Lesson.spaces === cartCount(Lesson.id)'>No more available spaces!</span>
