@@ -27,8 +27,8 @@
         </header>
         <main>
             <!-- Lesson page -->
-            <div v-if= 'showLesson'>
-                <div v-for="Lesson in sortedLessons" class="d-flex p-2 container-fluid mt-5">
+            <div v-if= 'showLesson' class="container-fluid p-5">
+                <div v-for="Lesson in sortedLessons" class="d-flex p-2">
                     <div class="p-2">
                         <figure>
                             <img v-bind:src="Lesson.image">
@@ -39,7 +39,7 @@
                 <p v-text="Lesson.Location"></p>
                 <p>Price: {{Lesson.price}}</p>
                 <p v-if="Lesson.spaces === cartCount(Lesson.id)"></p>
-                <p v-else>This Lesson remains {{Lesson.spaces - cartCount(Lesson.id)}} spaces</p>
+                <p v-else>This Lesson space remains {{Lesson.spaces - cartCount(Lesson.id)}} spaces</p>
                 <button class="btn btn-primary" v-on:click= "addToCart (Lesson)" v-if= "canAddToCart (Lesson)">
                     Add to cart
                 </button>
@@ -57,26 +57,31 @@
             </div>
             </div>
             </div>
-            <div v-else>
+            <div v-else class="container p-5">
                 <!-- Checkout page -->
                 <h2>Checkout</h2>
-                <p>
-                    <strong>Your Full Name:</strong>
-                    <input v-model="order.FullName"/>
-                </p>
-                <p>
-                    <strong>Phone Number:</strong>
-                    <input v-model="order.PhoneNumber"/>
-                </p>
+                <div class="mb-3 mt-3">
+                    <p>
+                        <strong>Your Full Name:</strong>
+                        <!-- regular expressions -->
+                        <input class="form-control" pattern="[a-zA-Z]+" title="Only text input is allowed" required oninput="this.value = this.value.replace(/[^a-zA-Z- ]/g, '')" v-model="order.FullName" placeholder="letters only"/>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <strong>Phone Number:</strong>
+                        <!-- regular expressions -->
+                        <input class="form-control" pattern="[0-9]+" title="Only numbers input is allowed" required oninput="this.value = this.value.replace(/[^0-9-+]/g, '')" v-model="order.PhoneNumber" placeholder="numbers only"/>
+                    </p>
+                </div>
                 <h2>Order Information</h2>
-                <p>Full Name: {{order.firstName}}</p>
-                <p>Last Name: {{order.lastName}}</p>
-                <button v-on:click="submitForm">Place Order</button>
+                <p>Full Name: {{order.FullName}}</p>
+                <p>Phone Number: {{order.PhoneNumber}}</p>
+                <button class="btn btn-primary" v-on:click="submitForm">Place Order</button>
             </div>
         </main>
     </div>
     <!-- Data Input -->
-    
     <script src="Lessons.js"></script>
     <script>
         var webstore = new Vue({
