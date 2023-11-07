@@ -28,10 +28,13 @@
         <main>
             <!-- Lesson page -->
             <div v-if= 'showLesson'>
-                <div v-for="Lesson in sortedLessons">
-                <figure>
-                    <img v-bind:src="Lesson.image">
-                </figure>
+                <div v-for="Lesson in sortedLessons" class="d-flex p-2 container-fluid mt-5">
+                    <div class="p-2">
+                        <figure>
+                            <img v-bind:src="Lesson.image">
+                        </figure>
+                    </div>
+                <div class="p-3">
                 <h2 v-text="Lesson.Subject"></h2>
                 <p v-text="Lesson.Location"></p>
                 <p>Price: {{Lesson.price}}</p>
@@ -53,63 +56,21 @@
                 </div>
             </div>
             </div>
+            </div>
             <div v-else>
                 <!-- Checkout page -->
                 <h2>Checkout</h2>
                 <p>
-                    <strong>First Name:</strong>
-                    <input v-model="order.firstName"/>
+                    <strong>Your Full Name:</strong>
+                    <input v-model="order.FullName"/>
                 </p>
                 <p>
-                    <strong>Last Name:</strong>
-                    <input v-model="order.lastName"/>
-                </p>
-                <p>
-                    <strong>Address:</strong> <input v-model="order.address"/>
-                </p>
-                <p>
-                    <strong>City:</strong> <input v-model="order.city"/>
-                </p>
-                <p>
-                    <strong>State:</strong>
-                    <select v-model="order.state">
-                        <!-- Way 1 -->
-                        <option v-for="(state, key) in states" v-bind:value="state">
-                            {{key}}
-                        </option>
-                        <!-- Way 2((Easy understanding)) -->
-                        <!-- <option disabled value="">State</option>
-                        <option v-bind:value="states.AL">AL</option>
-                        <option v-bind:value="states.AR">AR</option>
-                        <option v-bind:value="states.CA">CA</option>
-                        <option v-bind:value="states.NV">NV</option> -->
-                    </select>
-                </p>
-                <p>
-                    <strong>Zip/Postal Code:</strong> 
-                    <input v-model="order.zip"/>
-                </p>
-                <p>
-                    <input input type="checkbox" id="gift" value="true" 
-                    v-model="order.gift" v-bind:true-value="order.sendGift" 
-                    v-bind:false-value="order.dontSendGift">
-                    <label for="gift">Ship As Gift?</label>
-                </p>
-                <p>
-                    <input input type="radio" id="gift" value="Home" v-model="order.method">
-                    <label for="home">Home</label>
-                </p>
-                <p>
-                    <input input type="radio" id="business" value="Business" v-model="order.method">
-                    <label for="business">Business</label>
+                    <strong>Phone Number:</strong>
+                    <input v-model="order.PhoneNumber"/>
                 </p>
                 <h2>Order Information</h2>
-                <p>First Name: {{order.firstName}}</p>
+                <p>Full Name: {{order.firstName}}</p>
                 <p>Last Name: {{order.lastName}}</p>
-                <p>Address: {{order.address}}</p>
-                <p>City: {{order.city}}</p>
-                <p>Zip: {{order.zip}}</p>
-                <p>State: {{order.state}}</p>
                 <button v-on:click="submitForm">Place Order</button>
             </div>
         </main>
@@ -124,16 +85,8 @@
                 showLesson: true,
                 sitename: 'After school classes and activities',
                 order: {
-                    firstName: '',
-                    lastName: '',
-                    address: '',
-                    city: '',
-                    zip: '',
-                    state: '',
-                    method: 'Home',
-                    gift: false,
-                    sendGift: 'Send as a gift',
-                    dontSendGift: 'Do not send as a gift',
+                    FullName: '',
+                    PhoneNumber: '',
                 },
                 states: {
                     AL: 'Alabama',
