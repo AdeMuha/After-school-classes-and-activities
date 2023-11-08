@@ -28,6 +28,18 @@
         <main>
             <!-- Lesson page -->
             <div v-if= 'showLesson' class="container-fluid p-5">
+                <!-- The bug start here -->
+                <div>
+                    <select v-model="sortBy">
+                      <option value="price">Price</option>
+                      <option value="location">Location</option>
+                      <option value="spaces">Spaces</option>
+                      <option value="Subject">Subject</option>
+                    </select>
+                    <button @click="sortData">Sort Ascending</button>
+                    <button @click="sortDataDesc">Sort Descending</button>
+                  </div>
+                  <!-- The bug Ends here -->
                 <div v-for="Lesson in sortedLessons" class="d-flex p-2">
                     <div class="p-2">
                         <figure>
@@ -93,12 +105,6 @@
                     FullName: '',
                     PhoneNumber: '',
                 },
-                states: {
-                    AL: 'Alabama',
-                    AR: 'Arizona',
-                    CA: 'California',
-                    NV: 'Nevada',
-                },
                 Lesson:{
                     id: 1001,
                     Subject: "Cat Food, 25lb bag",
@@ -133,7 +139,27 @@
                     }
                 }
                 return count;
-            }
+            },
+            // The bug start here
+            sortData() {
+                this.Lessons.sort((a, b) => {
+                  if (this.sortBy === "Subject") {
+                    return a.Subject.localeCompare(b.Subject);
+                  } else {
+                    return a[this.sortBy] - b[this.sortBy];
+                  }
+                });
+              },
+              sortDataDesc() {
+                this.Lessons.sort((a, b) => {
+                  if (this.sortBy === "Subject") {
+                    return b.Subject.localeCompare(a.Subject);
+                  } else {
+                    return b[this.sortBy] - a[this.sortBy];
+                  }
+                });
+              }
+              // The bug ends here
             },
             computed:{
                 cartItemCount: function(){
@@ -145,14 +171,17 @@
                 itemsLeft() {
                     return this.Lesson.spaces - this.cartItemCount;
                 },
+                // The bug start here
                 sortedLessons() {
-                    function compare(a, b){
-                        if (a.price > b.price) return 1;
-                        if (a.price < b.price) return -1;
-                        return 0;
-                    }
-                    return this.Lessons.sort(compare);
-                }
+                    return this.Lessons.sort((a, b) => {
+                      if (this.sortBy === "Subject") {
+                        return a.Subject.localeCompare(b.Subject);
+                      } else {
+                        return a[this.sortBy] - b[this.sortBy];
+                      }
+                    });
+                  }
+                  // The bug ends here
             },
         })
     </script>
