@@ -1,89 +1,128 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>After school classes and activities</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://unpkg.com/vue@2.7.8/dist/vue.js"></script>
-    
+
 </head>
+
 <body>
     <div id="app" class="container-fluid mt-3">
         <header>
             <div class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top" style="margin: 0;">
                 <div class="col-sm-10">
                     <!-- <h1 v-text= "sitename"></h1> -->
-                    <h2 class="text-white">{{ sitename }}</h2>
+                    <h2 style="font-size: 20px;" class="text-white">{{ sitename }}</h2>
+
+                </div>
+                <div style="margin-left: -120px;">
+                    <input type="text" v-model="searchInput">
+                    <!-- <ul>
+                        <li v-for="item in filteredItems" :key="item.id">{{ item.Subject }}</li>
+                    </ul> -->
                 </div>
                 <div class="col-sm-2">
-                    <button class="btn btn-secondary text-white" v-on:click= 'showCheckout'>
+                    <button class="btn btn-secondary text-white" v-if="canUpdateToCart (Lesson)"
+                        v-on:click='showCheckout'>
+                        {{ cartItemCount }}
+                        <span class=" fas fa-shopping-cart"></span>Checkout
+                    </button>
+                    <button class="btn btn-secondary text-white" disabled='disabled' v-else>
                         {{ cartItemCount }}
                         <span class="fas fa-shopping-cart"></span>Checkout
-                    </button>         
+                    </button>
                 </div>
             </div>
         </header>
         <main>
             <!-- Lesson page -->
-            <div v-if= 'showLesson' class="container-fluid p-5">
+            <div v-if='showLesson' class="container-fluid p-5">
                 <!-- The bug start here -->
                 <div>
                     <select v-model="sortBy">
-                      <option value="price">Price</option>
-                      <option value="location">Location</option>
-                      <option value="spaces">Spaces</option>
-                      <option value="Subject">Subject</option>
+                        <option value="price">Price</option>
+                        <option value="location">Location</option>
+                        <option value="spaces">Spaces</option>
+                        <option value="Subject">Subject</option>
                     </select>
                     <button @click="sortData">Sort Ascending</button>
                     <button @click="sortDataDesc">Sort Descending</button>
-                  </div>
-                  <!-- The bug Ends here -->
-                <div v-for="Lesson in sortedLessons" class="d-flex p-2">
+                </div>
+                <!-- The bug Ends here -->
+                <div v-for="Lesson in filteredAndSortedLessons" class="d-flex p-2">
                     <div class="p-2">
                         <figure>
                             <img v-bind:src="Lesson.image">
                         </figure>
                     </div>
-                <div class="p-3">
-                <h2 v-text="Lesson.Subject"></h2>
-                <p v-text="Lesson.Location"></p>
-                <p>Price: {{Lesson.price}}</p>
-                <p v-if="Lesson.spaces === cartCount(Lesson.id)"></p>
-                <p v-else>This Lesson space remains {{Lesson.spaces - cartCount(Lesson.id)}} spaces</p>
-                <button class="btn btn-primary" v-on:click= "addToCart (Lesson)" v-if= "canAddToCart (Lesson)">
-                    Add to cart
-                </button>
-                <button class="btn btn-secondary" disabled='disabled' v-else>
-                    Add to cart
-                </button>
-                <span v-if='Lesson.spaces === cartCount(Lesson.id)'>No more available spaces!</span>
-                <span v-else-if="Lesson.spaces - cartCount(Lesson.id) < 5">
-                Only few left!</span>
-                <span v-else>Buy now!</span>
-                <div>
-                    <span v-for='n in Lesson.rating'>★</span>
-                    <span v-for='n in 5 - Lesson.rating'>☆</span>
+                    <div class="p-3">
+                        <h2 v-text="Lesson.Subject"></h2>
+                        <p v-text="Lesson.Location"></p>
+                        <p>Price: {{Lesson.price}}</p>
+                        <p v-if="Lesson.spaces === cartCount(Lesson.id)"></p>
+                        <p v-else>This Lesson space remains {{Lesson.spaces - cartCount(Lesson.id)}} spaces</p>
+                        <button class="btn btn-primary" v-on:click="addToCart (Lesson)" v-if="canAddToCart (Lesson)">
+                            Add to cart
+                        </button>
+                        <button class="btn btn-secondary" disabled='disabled' v-else>
+                            Add to cart
+                        </button>
+                        <span v-if='Lesson.spaces === cartCount(Lesson.id)'>No more available spaces!</span>
+                        <span v-else-if="Lesson.spaces - cartCount(Lesson.id) < 5">
+                            Only few left!</span>
+                        <span v-else>Buy now!</span>
+                        <div>
+                            <span v-for='n in Lesson.rating'>★</span>
+                            <span v-for='n in 5 - Lesson.rating'>☆</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
-            </div>
             <div v-else class="container p-5">
+                <div v-for="Lesson in sortedCart" class="d-flex p-2">
+                    <div class="p-2">
+                        <figure>
+                            <img v-bind:src="Lesson.image">
+                        </figure>
+                    </div>
+                    <div class="p-3">
+                        <h2 v-text="Lesson.Subject"></h2>
+                        <p v-text="Lesson.Location"></p>
+                        <p>Price: {{Lesson.price}}</p>
+                        <p v-if="Lesson.spaces === cartCount(Lesson.id)"></p>
+                        <button class="btn btn-danger" v-on:click="removeFromCart (Lesson)">
+                            Remove</button>
+                        </button>
+                        <div>
+                            <span v-for='n in Lesson.rating'>★</span>
+                            <span v-for='n in 5 - Lesson.rating'>☆</span>
+                        </div>
+                    </div>
+                </div>
                 <!-- Checkout page -->
                 <h2>Checkout</h2>
                 <div class="mb-3 mt-3">
                     <p>
                         <strong>Your Full Name:</strong>
                         <!-- regular expressions -->
-                        <input class="form-control" pattern="[a-zA-Z]+" title="Only text input is allowed" required oninput="this.value = this.value.replace(/[^a-zA-Z- ]/g, '')" v-model="order.FullName" placeholder="letters only"/>
+                        <input class="form-control" pattern="[a-zA-Z]+" title="Only text input is allowed" required
+                            oninput="this.value = this.value.replace(/[^a-zA-Z- ]/g, '')" v-model="order.FullName"
+                            placeholder="letters only" />
                     </p>
                 </div>
                 <div>
                     <p>
                         <strong>Phone Number:</strong>
                         <!-- regular expressions -->
-                        <input class="form-control" pattern="[0-9]+" title="Only numbers input is allowed" required oninput="this.value = this.value.replace(/[^0-9-+]/g, '')" v-model="order.PhoneNumber" placeholder="numbers only"/>
+                        <input class="form-control" pattern="[0-9]+" title="Only numbers input is allowed" required
+                            oninput="this.value = this.value.replace(/[^0-9-+]/g, '')" v-model="order.PhoneNumber"
+                            placeholder="numbers only" />
                     </p>
                 </div>
                 <h2>Order Information</h2>
@@ -97,15 +136,15 @@
     <script src="Lessons.js"></script>
     <script>
         var webstore = new Vue({
-            el:'#app',
-            data:{
+            el: '#app',
+            data: {
                 showLesson: true,
                 sitename: 'After school classes and activities',
                 order: {
                     FullName: '',
                     PhoneNumber: '',
                 },
-                Lesson:{
+                Lesson: {
                     id: 1001,
                     Subject: "Cat Food, 25lb bag",
                     Location: "A 25 pound bag of irresistible, organic goodness for your cat.",
@@ -114,76 +153,95 @@
                     spaces: 10,
                     rating: 3,
                 },
-                Lessons: Lessons,
-                cart:[]
+                Lessons: Lessons, // Assuming Lessons is an array of lessons
+                cart: [],
+                sortBy: "Subject", // Set the default sorting key
+                ascending: true,   // Set the default sorting order
+                search: '',
+                searchInput: '',
             },
-            //Cases
-            methods:{
-                addToCart(Lesson){
-                    this.cart.push(Lesson.id);
+            methods: {
+                addToCart(Lesson) {
+                    this.cart.push(Lesson);
+
                 },
-                showCheckout(){
-                    this.showLesson = this.showLesson ? false : true;
+                removeFromCart(lesson) {
+                    const index = this.cart.indexOf(lesson);
+                    if (index > -1) {
+                        this.cart.splice(index, 1);
+                    }
                 },
-                submitForm(){
+                showCheckout() {
+                    this.showLesson = !this.showLesson;
+                },
+                submitForm() {
                     alert('Order submitted!');
                 },
                 canAddToCart(Lesson) {
                     return Lesson.spaces > this.cartCount(Lesson.id);
                 },
-                cartCount(id){
-                let count = 0;
-                for(let i = 0; i < this.cart.length; i++) {
-                    if (this.cart[i] === id) {
-                        count++;
-                    }
-                }
-                return count;
+                canUpdateToCart(Lesson) {
+                    return this.cart.length >= 1;
+                },
+                cartCount(id) {
+                    return this.cart.filter(itemId => itemId === id).length;
+                },
+                sortData() {
+                    this.ascending = true;
+                },
+                sortDataDesc() {
+                    this.ascending = false;
+                },
             },
-            // The bug start here
-            sortData() {
-                this.Lessons.sort((a, b) => {
-                  if (this.sortBy === "Subject") {
-                    return a.Subject.localeCompare(b.Subject);
-                  } else {
-                    return a[this.sortBy] - b[this.sortBy];
-                  }
-                });
-              },
-              sortDataDesc() {
-                this.Lessons.sort((a, b) => {
-                  if (this.sortBy === "Subject") {
-                    return b.Subject.localeCompare(a.Subject);
-                  } else {
-                    return b[this.sortBy] - a[this.sortBy];
-                  }
-                });
-              }
-              // The bug ends here
-            },
-            computed:{
-                cartItemCount: function(){
+            computed: {
+                cartItemCount() {
                     return this.cart.length || "";
                 },
-                canAddToCart: function() {
+                canAddToCart() {
                     return this.Lesson.spaces > this.cartItemCount;
                 },
                 itemsLeft() {
                     return this.Lesson.spaces - this.cartItemCount;
                 },
-                // The bug start here
-                sortedLessons() {
-                    return this.Lessons.sort((a, b) => {
-                      if (this.sortBy === "Subject") {
-                        return a.Subject.localeCompare(b.Subject);
-                      } else {
-                        return a[this.sortBy] - b[this.sortBy];
-                      }
+                sortedCart() {
+                    return this.cart;
+                },
+                filteredAndSortedLessons() {
+                    return this.Lessons.filter(Lessons => {
+                        return Lessons.Subject.toLowerCase().includes(this.searchInput.toLowerCase());
+                    }).sort((a, b) => {
+                        if (this.sortBy == 'Subject') {
+                            if (this.ascending) {
+                                return a.Subject.localeCompare(b.Subject);
+                            } else {
+                                return b.Subject.localeCompare(a.Subject);
+                            }
+
+                        } else if (this.sortBy == 'location') {
+                            if (this.ascending) {
+                                return a.Location.localeCompare(b.Location);
+                            } else {
+                                return b.Location.localeCompare(a.Location);
+                            }
+                        } else if (this.sortBy == 'price') {
+                            if (this.ascending) {
+                                return Lessons.sort((a, b) => b.price - a.price);
+                            } else {
+                                return Lessons.sort((a, b) => a.price - b.price);
+                            }
+                        } else if (this.sortBy == 'spaces') {
+                            if (this.ascending) {
+                                return this.Lessons.slice().sort((a, b) => a.spaces - b.spaces);
+                            } else {
+                                return this.Lessons.slice().sort((a, b) => b.spaces - a.spaces);
+                            }
+                        }
                     });
-                  }
-                  // The bug ends here
+                }
             },
         })
+
     </script>
 </body>
+
 </html>
