@@ -22,20 +22,20 @@
 
                 </div>
                 <div class="d-flex">
-                <div class="col-sm p-2">
-                    <input type="text" class="form-control"  v-model="searchInput" placeholder="Search">
-                </div>
-                <div class="col-sm p-2">
-                    <button class="btn btn-primary text-white" v-if="canUpdateToCart (Lesson)"
-                        v-on:click='showCheckout'>
-                        {{ cartItemCount }}
-                        <span class=" fas fa-shopping-cart"></span>Checkout
-                    </button>
-                    <button class="btn btn-secondary text-white" disabled='disabled' v-else>
-                        {{ cartItemCount }}
-                        <span class="fas fa-shopping-cart"></span>Checkout
-                    </button>
-                </div>
+                    <div class="col-sm p-2">
+                        <input type="text" class="form-control" v-model="searchInput" placeholder="Search">
+                    </div>
+                    <div class="col-sm p-2">
+                        <button class="btn btn-primary text-white" v-if="canUpdateToCart (Lesson)"
+                            v-on:click='showCheckout'>
+                            {{ cartItemCount }}
+                            <span class=" fas fa-shopping-cart"></span>Checkout
+                        </button>
+                        <button class="btn btn-secondary text-white" disabled='disabled' v-else>
+                            {{ cartItemCount }}
+                            <span class="fas fa-shopping-cart"></span>Checkout
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -51,8 +51,10 @@
                         <option value="spaces">Spaces</option>
                         <option value="Subject">Subject</option>
                     </select>
-                    <button class="btn btn-dark" @click="sortData"><span class=" fas fa-long-arrow-alt-up"></span></button>
-                    <button class="btn btn-dark" @click="sortDataDesc"><span class=" fas fa-long-arrow-alt-down"></span></button>
+                    <button class="btn btn-dark" @click="sortData"><span
+                            class=" fas fa-long-arrow-alt-up"></span></button>
+                    <button class="btn btn-dark" @click="sortDataDesc"><span
+                            class=" fas fa-long-arrow-alt-down"></span></button>
                 </div>
                 <div v-for="Lesson in filteredAndSortedLessons" class="d-flex p-2">
                     <div class="p-2">
@@ -84,23 +86,28 @@
                 </div>
             </div>
             <div v-else class="container p-5">
-                <div v-for="Lesson in sortedCart" class="d-flex p-2">
-                    <div class="p-2">
-                        <figure>
-                            <img v-bind:src="Lesson.image">
-                        </figure>
-                    </div>
-                    <div class="p-3">
-                        <h2 v-text="Lesson.Subject"></h2>
-                        <p v-text="Lesson.Location"></p>
-                        <p>Price: {{Lesson.price}}</p>
-                        <p v-if="Lesson.spaces === cartCount(Lesson.id)"></p>
-                        <button class="btn btn-danger" v-on:click="removeFromCart (Lesson)">
-                            Remove</button>
-                        </button>
-                        <div>
-                            <span v-for='n in Lesson.rating'>★</span>
-                            <span v-for='n in 5 - Lesson.rating'>☆</span>
+                <div v-if="sortedCart.length === 0" class="container p-5">
+                    <button class="btn btn-warning" v-on:click='goToHome'>Back to Home Page</button>
+                </div>
+                <div v-else class="container p-5">
+                    <div v-for="Lesson in sortedCart" class="d-flex p-2">
+                        <div class="p-2">
+                            <figure>
+                                <img v-bind:src="Lesson.image">
+                            </figure>
+                        </div>
+                        <div class="p-3">
+                            <h2 v-text="Lesson.Subject"></h2>
+                            <p v-text="Lesson.Location"></p>
+                            <p>Price: {{Lesson.price}}</p>
+                            <p>Quantity: {{Lesson.quantity}}</p>
+                            <button class="btn btn-danger" v-on:click="removeFromCart (Lesson)">
+                                Remove</button>
+                            </button>
+                            <div>
+                                <span v-for='n in Lesson.rating'>★</span>
+                                <span v-for='n in 5 - Lesson.rating'>☆</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -113,6 +120,10 @@
                         <input class="form-control" pattern="[a-zA-Z]+" title="Only text input is allowed" required
                             oninput="this.value = this.value.replace(/[^a-zA-Z- ]/g, '')" v-model="order.FullName"
                             placeholder="letters only" />
+                        <span v-if="!order.isNameValid && order.FullName.length === 0" class="text-danger">Name is
+                            required</span>
+                        <span v-if="!order.isNameValid && order.FullName.length > 0" class="text-danger">Invalid
+                            name</span>
                     </p>
                 </div>
                 <div>
@@ -122,6 +133,9 @@
                         <input class="form-control" pattern="[0-9]+" title="Only numbers input is allowed" required
                             oninput="this.value = this.value.replace(/[^0-9-+]/g, '')" v-model="order.PhoneNumber"
                             placeholder="numbers only" />
+                        <span v-if="!order.isPhoneValid && order.PhoneNumber.length === 0" class="text-danger">Phone
+                            number is required</span>
+
                     </p>
                 </div>
                 <h2>Order Information</h2>
@@ -141,17 +155,19 @@
                 sitename: 'After school classes and activities',
                 order: {
                     FullName: '',
+                    isNameValid: true,
                     PhoneNumber: '',
+                    isPhoneValid: true,
                 },
-                Lesson: {
-                    id: 1001,
-                    Subject: "Cat Food, 25lb bag",
-                    Location: "A 25 pound bag of irresistible, organic goodness for your cat.",
-                    price: 2000,
-                    image: "Cat.jpg",
-                    spaces: 10,
-                    rating: 3,
-                },
+               // Lesson: {
+               //     id: 1001,
+               //     Subject: "Cat Food, 25lb bag",
+               //     Location: "A 25 pound bag of irresistible, organic goodness for your cat.",
+               //     price: 2000,
+               //     image: "Cat.jpg",
+               //     spaces: 10,
+               //     rating: 3,
+              //  },
                 Lessons: Lessons, // Assuming Lessons is an array of lessons
                 cart: [],
                 sortBy: "default", // Set the default sorting key
@@ -161,20 +177,62 @@
             },
             methods: {
                 addToCart(Lesson) {
-                    this.cart.push(Lesson);
+                    //this.cart.push(Lesson);
+                    //Lesson.spaces -= 1;
+                    const index = this.cart.findIndex(item => item.id === Lesson.id);
 
+                    // If the lesson is already in the cart, increment the quantity
+                    if (index !== -1) {
+                        this.cart[index].quantity++;
+                    } else {
+                        // Otherwise, add the lesson to the cart with quantity 1
+                        this.cart.push({ id: Lesson.id, quantity: 1, ...Lesson });
+                    }
+
+                    // Update the spaces property of the Lesson object
+                    Lesson.spaces -= 1;
                 },
                 removeFromCart(lesson) {
-                    const index = this.cart.indexOf(lesson);
-                    if (index > -1) {
+                    const index = this.cart.findIndex(item => item.id === lesson.id);
+
+                    // If the lesson is in the cart and the quantity is more than 1, decrement the quantity
+                    if (index !== -1 && this.cart[index].quantity > 1) {
+                        this.cart[index].quantity--;
+                    } else {
+                        // Otherwise, remove the lesson from the cart
                         this.cart.splice(index, 1);
+                        // Update the spaces property of the Lesson object
+                        this.$set(lesson, 'spaces', lesson.spaces + 1);
                     }
                 },
                 showCheckout() {
                     this.showLesson = !this.showLesson;
                 },
+                goToHome() {
+                    this.showLesson = true;
+                },
                 submitForm() {
-                    alert('Order submitted!');
+                    if (this.order.FullName.length === 0) {
+                        this.order.isNameValid = false;
+                    } else {
+                        this.order.isNameValid = true;
+                    }
+
+                    if (this.order.PhoneNumber.length === 0) {
+                        this.order.isPhoneValid = false;
+                    } else {
+                        this.order.isPhoneValid = true;
+                    }
+
+                    // Check if all validations pass
+                    if (this.order.isNameValid && this.order.isPhoneValid) {
+                        // Perform your form submission logic
+                        alert('Order submitted!');
+                    }
+
+                },
+                quantityl() {
+                    return this.quantity;
                 },
                 canAddToCart(Lesson) {
                     return Lesson.spaces > this.cartCount(Lesson.id);
@@ -182,8 +240,11 @@
                 canUpdateToCart(Lesson) {
                     return this.cart.length >= 1;
                 },
+                /** cartCount(id) {
+                     return this.cart.filter(itemId => itemId === id).length;
+                 }, */
                 cartCount(id) {
-                    return this.cart.filter(itemId => itemId === id).length;
+                    return this.cart.filter(item => item === id).length;
                 },
                 sortData() {
                     this.ascending = true;
