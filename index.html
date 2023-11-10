@@ -16,19 +16,17 @@
     <div id="app" class="container-fluid mt-3">
         <header>
             <div class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top" style="margin: 0;">
-                <div class="col-sm-10">
+                <div class="col">
                     <!-- <h1 v-text= "sitename"></h1> -->
-                    <h2 style="font-size: 20px;" class="text-white">{{ sitename }}</h2>
+                    <h2 class="navbar-brand">{{ sitename }}</h2>
 
                 </div>
-                <div style="margin-left: -120px;">
-                    <input type="text" v-model="searchInput">
-                    <!-- <ul>
-                        <li v-for="item in filteredItems" :key="item.id">{{ item.Subject }}</li>
-                    </ul> -->
+                <div class="d-flex">
+                <div class="col-sm p-2">
+                    <input type="text" class="form-control"  v-model="searchInput" placeholder="Search">
                 </div>
-                <div class="col-sm-2">
-                    <button class="btn btn-secondary text-white" v-if="canUpdateToCart (Lesson)"
+                <div class="col-sm p-2">
+                    <button class="btn btn-primary text-white" v-if="canUpdateToCart (Lesson)"
                         v-on:click='showCheckout'>
                         {{ cartItemCount }}
                         <span class=" fas fa-shopping-cart"></span>Checkout
@@ -38,23 +36,24 @@
                         <span class="fas fa-shopping-cart"></span>Checkout
                     </button>
                 </div>
+                </div>
             </div>
         </header>
         <main>
             <!-- Lesson page -->
             <div v-if='showLesson' class="container-fluid p-5">
-                <!-- The bug start here -->
-                <div>
-                    <select v-model="sortBy">
+                <!--  Sorting category -->
+                <div class="p-3">
+                    <select class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown" v-model="sortBy">
+                        <option disabled value="default">Choose your preference</option>
                         <option value="price">Price</option>
                         <option value="location">Location</option>
                         <option value="spaces">Spaces</option>
                         <option value="Subject">Subject</option>
                     </select>
-                    <button @click="sortData">Sort Ascending</button>
-                    <button @click="sortDataDesc">Sort Descending</button>
+                    <button class="btn btn-dark" @click="sortData"><span class=" fas fa-long-arrow-alt-up"></span></button>
+                    <button class="btn btn-dark" @click="sortDataDesc"><span class=" fas fa-long-arrow-alt-down"></span></button>
                 </div>
-                <!-- The bug Ends here -->
                 <div v-for="Lesson in filteredAndSortedLessons" class="d-flex p-2">
                     <div class="p-2">
                         <figure>
@@ -155,7 +154,7 @@
                 },
                 Lessons: Lessons, // Assuming Lessons is an array of lessons
                 cart: [],
-                sortBy: "Subject", // Set the default sorting key
+                sortBy: "default", // Set the default sorting key
                 ascending: true,   // Set the default sorting order
                 search: '',
                 searchInput: '',
@@ -228,12 +227,6 @@
                                 return Lessons.sort((a, b) => b.price - a.price);
                             } else {
                                 return Lessons.sort((a, b) => a.price - b.price);
-                            }
-                        } else if (this.sortBy == 'spaces') {
-                            if (this.ascending) {
-                                return this.Lessons.slice().sort((a, b) => a.spaces - b.spaces);
-                            } else {
-                                return this.Lessons.slice().sort((a, b) => b.spaces - a.spaces);
                             }
                         }
                     });
