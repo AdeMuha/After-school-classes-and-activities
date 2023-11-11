@@ -67,7 +67,7 @@
                         <p v-text="Lesson.Location"></p>
                         <p>Price: {{Lesson.price}}</p>
                         <p v-if="Lesson.spaces === cartCount(Lesson.id)"></p>
-                        <p v-else>This Lesson space remains {{Lesson.spaces - cartCount(Lesson.id)}} spaces</p>
+                        <p v-else>This Lesson space remains <strong>{{Lesson.spaces - cartCount(Lesson.id)}}</strong> spaces</p>
                         <button class="btn btn-primary" v-on:click="addToCart (Lesson)" v-if="canAddToCart (Lesson)">
                             Add to cart
                         </button>
@@ -85,11 +85,11 @@
                     </div>
                 </div>
             </div>
-            <div v-else class="container p-5">
-                <div v-if="sortedCart.length === 0" class="container p-5">
+            <div v-else class="container-fluid p-5">
+                <div v-if="sortedCart.length === 0" class="p-3">
                     <button class="btn btn-warning" v-on:click='goToHome'>Back to Home Page</button>
                 </div>
-                <div v-else class="container p-5">
+                <div v-else class="p-5">
                     <div v-for="Lesson in sortedCart" class="d-flex p-2">
                         <div class="p-2">
                             <figure>
@@ -100,7 +100,7 @@
                             <h2 v-text="Lesson.Subject"></h2>
                             <p v-text="Lesson.Location"></p>
                             <p>Price: {{Lesson.price}}</p>
-                            <p>Quantity: {{Lesson.quantity}}</p>
+                            <p>Quantity: <strong>{{Lesson.quantity}}</strong></p>
                             <button class="btn btn-danger" v-on:click="removeFromCart (Lesson)">
                                 Remove</button>
                             </button>
