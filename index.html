@@ -27,13 +27,13 @@
                     </div>
                     <div class="col-sm p-2">
                         <button class="btn btn-primary text-white" v-if="canUpdateToCart (Lesson)"
-                            v-on:click='submitForm'>
+                            v-on:click='showCheckout'>
                             {{ cartItemCount }}
-                            <span class=" fas fa-shopping-cart"></span>Checkout
+                            <span class=" fas fa-shopping-cart"></span>Cart
                         </button>
                         <button class="btn btn-secondary text-white" disabled='disabled' v-else>
                             {{ cartItemCount }}
-                            <span class="fas fa-shopping-cart"></span>Checkout
+                            <span class="fas fa-shopping-cart"></span>Cart
                         </button>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
         </header>
         <main>
             <!-- Lesson page -->
-            <div class="container-fluid p-5">
+            <div v-if='showLesson' class="container-fluid p-5">
                 <!--  Sorting category -->
                 <div class="p-3">
                     <select class="btn btn-dark dropdown-toggle" type="button" data-toggle="dropdown" v-model="sortBy">
@@ -86,12 +86,11 @@
                 </div>
             </div>
             <!-- Checkout page/order Items -->
-            <div class="container-fluid p-5">
-                <!-- <div v-if="sortedCart.length === 0" class="p-3">
+            <div v-else class="container-fluid p-5">
+                <div v-if="sortedCart.length === 0" class="p-3">
                     <button class="btn btn-warning" v-on:click='goToHome'>Back to Home Page</button>
-                </div> -->
-                <h2>Lesson added</h2>
-                <div class="p-5">
+                </div>
+                <div v-else class="p-5">
                     <div v-for="Lesson in sortedCart" class="d-flex p-2">
                         <div class="p-2">
                             <figure>
@@ -139,10 +138,10 @@
 
                     </p>
                 </div>
-                <!-- <h2>Order Information</h2>
+                <h2>Order Information</h2>
                 <p>Full Name: {{order.FullName}}</p>
                 <p>Phone Number: {{order.PhoneNumber}}</p>
-                <button class="btn btn-primary" v-on:click="submitForm">Place Order</button> -->
+                <button class="btn btn-primary" v-on:click="submitForm">Checkout</button>
             </div>
         </main>
     </div>
@@ -152,7 +151,7 @@
         var webstore = new Vue({
             el: '#app',
             data: {
-        //      showLesson: true,
+                showLesson: true,
                 sitename: 'After school classes and activities',
                 order: {
                     FullName: '',
@@ -206,12 +205,12 @@
                         this.$set(lesson, 'spaces', lesson.spaces + 1);
                     }
                 },
-            //  showCheckout() {
-            //      this.showLesson = !this.showLesson;
-            //  },
-            //  goToHome() {
-            //      this.showLesson = true;
-            //  },
+                showCheckout() {
+                    this.showLesson = !this.showLesson;
+                },
+                goToHome() {
+                    this.showLesson = true;
+                },
                 submitForm() {
                     if (this.order.FullName.length === 0) {
                         this.order.isNameValid = false;
